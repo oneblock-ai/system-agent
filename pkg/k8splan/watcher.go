@@ -17,9 +17,6 @@ import (
 	"github.com/rancher/lasso/pkg/client"
 	"github.com/rancher/lasso/pkg/controller"
 	"github.com/rancher/lasso/pkg/scheme"
-	"github.com/rancher/system-agent/pkg/applyinator"
-	"github.com/rancher/system-agent/pkg/config"
-	"github.com/rancher/system-agent/pkg/prober"
 	corecontrollers "github.com/rancher/wrangler/pkg/generated/controllers/core/v1"
 	"github.com/sirupsen/logrus"
 	v1 "k8s.io/api/core/v1"
@@ -35,6 +32,10 @@ import (
 	"k8s.io/client-go/transport"
 	"k8s.io/client-go/util/retry"
 	"k8s.io/client-go/util/workqueue"
+
+	"github.com/rancher/system-agent/pkg/applyinator"
+	"github.com/rancher/system-agent/pkg/config"
+	"github.com/rancher/system-agent/pkg/prober"
 )
 
 const (
@@ -439,7 +440,7 @@ func validateKC(ctx context.Context, config *rest.Config) error {
 		},
 	})
 	config.WrapTransport = transportConfig.WrapTransport
-	config.Dial = transportConfig.Dial
+	config.Dial = transportConfig.DialHolder.Dial
 	// Overwrite TLS-related fields from config to avoid collision with
 	// Transport field.
 	config.TLSClientConfig = rest.TLSClientConfig{}

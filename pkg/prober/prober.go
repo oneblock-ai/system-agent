@@ -88,8 +88,7 @@ func DoProbe(probe Probe, probeStatus *ProbeStatus, initial bool) error {
 	probeDuration := time.Duration(probe.TimeoutSeconds) * time.Second
 	logrus.Tracef("[Probe: %s] timeout duration: %.0f seconds", probe.Name, probeDuration.Seconds())
 
-	probeResult, output, err := k8sProber.Probe(probeURL, http.Header{}, probeDuration)
-
+	probeResult, output, err := k8sProber.Probe(&http.Request{URL: probeURL}, probeDuration)
 	if err != nil {
 		logrus.Errorf("error while running probe (%s): %v", probe.Name, err)
 		return err
